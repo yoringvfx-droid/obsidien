@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+  <defs>
+    <style><![CDATA[
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+      text { font-family: 'Inter', sans-serif; }
+      .bg { fill: #0B0E14; }
+      .grid { fill: none; stroke: rgba(255,255,255,0.03); stroke-width: 1; }
+      .border { fill: none; stroke: rgba(255,255,255,0.1); stroke-width: 2; rx: 16; }
+      .chip-center { fill: #2A66EE; }
+      .label { fill: #8A91A6; font-size: 14px; font-weight: 700; letter-spacing: 2px; }
+      .glow-subtle { filter: drop-shadow(0px 0px 30px rgba(42,102,238,0.4)); }
+    ]]></style>
+    <pattern id="gridPattern" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.02)" stroke-width="1"/>
+    </pattern>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-opacity="0.15" />
+    </filter>
+  </defs>
+
+  <rect class="bg" width="1600" height="900" />
+  <rect width="1600" height="900" fill="url(#gridPattern)" />
+
+  <text x="800" y="80" text-anchor="middle" fill="#FFFFFF" font-size="32px" font-weight="800" letter-spacing="-0.5px">COLOR CONTEXT &amp; CONTRAST</text>
+  <text x="800" y="115" text-anchor="middle" fill="#8A91A6" font-size="18px">The exact same blue (#2A66EE) appears different based on structural context</text>
+
+  <!-- Left: Pop -->
+  <g transform="translate(60, 160)">
+    <rect class="border shadow" width="460" height="680" fill="#0D1117" filter="url(#shadow)" />
+    <text class="label" x="40" y="50">01 // DARK + LOW SATURATION</text>
+    <g transform="translate(40, 90)">
+      <!-- Surrounding low sat chips -->
+      <rect x="0" y="0" width="115" height="115" fill="#1C2329" rx="12"/>
+      <rect x="132" y="0" width="115" height="115" fill="#181D22" rx="12"/>
+      <rect x="264" y="0" width="115" height="115" fill="#202A33" rx="12"/>
+      
+      <rect x="0" y="132" width="115" height="115" fill="#11151A" rx="12"/>
+      <rect x="264" y="132" width="115" height="115" fill="#252F38" rx="12"/>
+
+      <rect x="0" y="264" width="115" height="115" fill="#1B2228" rx="12"/>
+      <rect x="264" y="264" width="115" height="115" fill="#1E272F" rx="12"/>
+
+      <rect x="0" y="396" width="115" height="115" fill="#171C21" rx="12"/>
+      <rect x="132" y="396" width="115" height="115" fill="#222C36" rx="12"/>
+      <rect x="264" y="396" width="115" height="115" fill="#191F26" rx="12"/>
+      
+      <!-- Center Chip -->
+      <rect x="110" y="110" width="160" height="290" class="chip-center glow-subtle" rx="16"/>
+    </g>
+    <!-- Effect indicator -->
+    <text x="230" y="640" text-anchor="middle" fill="#E2E8F0" font-size="20px" font-weight="700">Appears Bright &amp; Glowing</text>
+  </g>
+
+  <!-- Center: Blend -->
+  <g transform="translate(570, 160)">
+    <rect class="border" width="460" height="680" fill="#4B5563" filter="url(#shadow)" />
+    <text class="label" x="40" y="50" fill="#1F2937">02 // MID GRAY + SIMILAR SATURATION</text>
+    <g transform="translate(40, 90)">
+      <!-- Surrounding similar sat chips -->
+      <rect x="0" y="0" width="115" height="115" fill="#1C5DE0" rx="12"/>
+      <rect x="132" y="0" width="115" height="115" fill="#3674F2" rx="12"/>
+      <rect x="264" y="0" width="115" height="115" fill="#3A59DE" rx="12"/>
+      
+      <rect x="0" y="132" width="115" height="115" fill="#2451C4" rx="12"/>
+      <rect x="264" y="132" width="115" height="115" fill="#1B4DC9" rx="12"/>
+
+      <rect x="0" y="264" width="115" height="115" fill="#427DF5" rx="12"/>
+      <rect x="264" y="264" width="115" height="115" fill="#2881E3" rx="12"/>
+
+      <rect x="0" y="396" width="115" height="115" fill="#2E69E6" rx="12"/>
+      <rect x="132" y="396" width="115" height="115" fill="#1D4AB8" rx="12"/>
+      <rect x="264" y="396" width="115" height="115" fill="#3B7AE3" rx="12"/>
+      
+      <!-- Center Chip -->
+      <rect x="110" y="110" width="160" height="290" class="chip-center" rx="16" stroke="rgba(0,0,0,0.1)" stroke-width="2"/>
+    </g>
+    <!-- Effect indicator -->
+    <text x="230" y="640" text-anchor="middle" fill="#1F2937" font-size="20px" font-weight="700">Appears Muted &amp; Blended</text>
+  </g>
+
+  <!-- Right: Suppressed -->
+  <g transform="translate(1080, 160)">
+    <rect class="border" width="460" height="680" fill="#E6D553" filter="url(#shadow)" />
+    <text class="label" x="40" y="50" fill="#665D1A">03 // BRIGHT + HIGH SATURATION</text>
+    <g transform="translate(40, 90)">
+      <!-- Surrounding high sat/bright chips -->
+      <rect x="0" y="0" width="115" height="115" fill="#FF4D4D" rx="12"/>
+      <rect x="132" y="0" width="115" height="115" fill="#FF9900" rx="12"/>
+      <rect x="264" y="0" width="115" height="115" fill="#00E673" rx="12"/>
+      
+      <rect x="0" y="132" width="115" height="115" fill="#FF3399" rx="12"/>
+      <rect x="264" y="132" width="115" height="115" fill="#FFCC00" rx="12"/>
+
+      <rect x="0" y="264" width="115" height="115" fill="#00FFCC" rx="12"/>
+      <rect x="264" y="264" width="115" height="115" fill="#FF6600" rx="12"/>
+
+      <rect x="0" y="396" width="115" height="115" fill="#CC00FF" rx="12"/>
+      <rect x="132" y="396" width="115" height="115" fill="#00CCFF" rx="12"/>
+      <rect x="264" y="396" width="115" height="115" fill="#FF0055" rx="12"/>
+      
+      <!-- Center Chip -->
+      <rect x="110" y="110" width="160" height="290" class="chip-center" rx="16" style="filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.3));"/>
+    </g>
+    <!-- Effect indicator -->
+    <text x="230" y="640" text-anchor="middle" fill="#4D4613" font-size="20px" font-weight="700">Appears Dark &amp; Heavy</text>
+  </g>
+</svg>

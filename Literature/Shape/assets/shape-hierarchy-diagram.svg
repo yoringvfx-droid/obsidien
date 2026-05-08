@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="900" viewBox="0 0 1400 900">
+  <defs>
+    <linearGradient id="bg2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f4efe6"/>
+      <stop offset="100%" stop-color="#eef4f8"/>
+    </linearGradient>
+    <style>
+      .title { font: 700 44px 'Segoe UI', sans-serif; fill: #172128; }
+      .subtitle { font: 400 22px 'Segoe UI', sans-serif; fill: #4b5962; }
+      .label { font: 700 26px 'Segoe UI', sans-serif; fill: #172128; }
+      .body { font: 400 20px 'Segoe UI', sans-serif; fill: #314048; }
+      .small { font: 400 18px 'Segoe UI', sans-serif; fill: #5d6a71; }
+      .panel { fill: rgba(255,255,255,0.72); stroke: #cad4db; stroke-width: 2; }
+      .arrow { stroke: #51656d; stroke-width: 4; fill: none; marker-end: url(#m); }
+    </style>
+    <marker id="m" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#51656d"/>
+    </marker>
+  </defs>
+
+  <rect width="1400" height="900" fill="url(#bg2)"/>
+  <text x="80" y="90" class="title">Silhouette and Form Hierarchy</text>
+  <text x="80" y="130" class="subtitle">The three notes align into one production workflow: establish macro read, support it, then enrich it</text>
+
+  <rect x="70" y="180" width="1260" height="640" rx="28" ry="28" class="panel"/>
+
+  <circle cx="430" cy="500" r="180" fill="#f2b35c" opacity="0.95"/>
+  <path d="M430 320 C515 365, 565 450, 565 515 C565 610, 490 680, 410 680 C335 680, 260 620, 255 535 C250 460, 300 380, 430 320 Z" fill="#d96f51" opacity="0.88"/>
+  <path d="M435 370 C480 420, 500 470, 475 525 C450 575, 398 598, 360 570 C325 545, 322 492, 350 448 C370 416, 395 396, 435 370 Z" fill="#fff6d9" opacity="0.95"/>
+  <circle cx="820" cy="360" r="18" fill="#172128"/>
+  <circle cx="1030" cy="500" r="14" fill="#172128"/>
+  <circle cx="930" cy="650" r="12" fill="#172128"/>
+
+  <path d="M838 360 C915 340, 955 320, 1020 300" class="arrow"/>
+  <path d="M1045 500 C1120 500, 1180 510, 1260 540" class="arrow"/>
+  <path d="M942 650 C1050 700, 1135 730, 1255 740" class="arrow"/>
+
+  <text x="1030" y="295" class="label">Primary shape</text>
+  <text x="1030" y="330" class="body">largest silhouette</text>
+  <text x="1030" y="360" class="body">first gameplay message</text>
+  <text x="1030" y="390" class="body">should read even when squinting</text>
+
+  <text x="1030" y="535" class="label">Secondary shapes</text>
+  <text x="1030" y="570" class="body">support direction and meaning</text>
+  <text x="1030" y="600" class="body">reinforce, never contradict</text>
+  <text x="1030" y="630" class="body">use uneven distribution</text>
+
+  <text x="1030" y="740" class="label">Tertiary details</text>
+  <text x="1030" y="775" class="body">texture, sparks, edge activity</text>
+  <text x="1030" y="805" class="body">enrich without stealing focus</text>
+
+  <text x="145" y="245" class="small">Practical reading order</text>
+  <text x="145" y="275" class="small">1. silhouette  2. supporting masses  3. micro detail</text>
+</svg>

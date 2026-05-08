@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+  <defs>
+    <style><![CDATA[
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+      text { font-family: 'Inter', sans-serif; }
+      .bg { fill: #0B0E14; }
+      .panel { fill: #131822; stroke: rgba(255,255,255,0.05); stroke-width: 2; rx: 32; }
+      .badge-text { font-size: 14px; font-weight: 800; fill: #FFFFFF; letter-spacing: 2px; }
+      .badge-bad { fill: #EF4444; rx: 12; }
+      .badge-good { fill: #10B981; rx: 12; }
+      
+      .guide-ring { fill: none; stroke: rgba(255,255,255,0.05); stroke-width: 2; stroke-dasharray: 6 6; }
+      .gradient-path { fill: none; stroke: rgba(255,255,255,0.8); stroke-width: 4; stroke-linecap: round; }
+      .node { stroke: #131822; stroke-width: 4; }
+      .glow { filter: drop-shadow(0px 8px 16px rgba(0,0,0,0.5)); }
+      .note { fill: #8A91A6; font-size: 18px; font-weight: 600; }
+      .tiny { fill: #A0AEC0; font-size: 14px; font-weight: 700; }
+      .bar-border { fill: none; stroke: rgba(255,255,255,0.1); stroke-width: 2; rx: 30; }
+    ]]></style>
+    
+    <linearGradient id="muddy" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#FF6B00"/>
+      <stop offset="50%" stop-color="#737A82"/>
+      <stop offset="100%" stop-color="#0066FF"/>
+    </linearGradient>
+
+    <linearGradient id="clean" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#FF6B00"/>
+      <stop offset="30%" stop-color="#FFD600"/>
+      <stop offset="70%" stop-color="#00E5FF"/>
+      <stop offset="100%" stop-color="#0066FF"/>
+    </linearGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.02)" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <rect class="bg" width="1600" height="900" />
+  <rect width="1600" height="900" fill="url(#grid)" />
+  
+  <g transform="translate(60, 60)">
+    <rect class="panel" width="700" height="780" />
+    <rect class="badge-bad" x="40" y="40" width="100" height="28" />
+    <text class="badge-text" x="90" y="59" text-anchor="middle">BAD PATH</text>
+    <text class="note" x="40" y="110">Linear interpolation creates a "dead gray" zone</text>
+
+    <!-- Color Wheel Abstraction -->
+    <g transform="translate(350, 340)">
+      <circle class="guide-ring" r="160" />
+      <!-- Colored ring segments for context -->
+      <path d="M 0 -160 A 160 160 0 0 1 160 0 A 160 160 0 0 1 0 160 A 160 160 0 0 1 -160 0 A 160 160 0 0 1 0 -160" fill="none" stroke="rgba(255,255,255,0.02)" stroke-width="20" />
+      
+      <line class="gradient-path" x1="-150" y1="50" x2="150" y2="-50" />
+      
+      <circle class="node glow" cx="-150" cy="50" r="16" fill="#FF6B00"/>
+      <circle class="node glow" cx="150" cy="-50" r="16" fill="#0066FF"/>
+      <circle class="node glow" cx="0" cy="0" r="16" fill="#737A82"/>
+      
+      <text class="tiny" x="-150" y="90" text-anchor="middle">Orange</text>
+      <text class="tiny" x="150" y="-15" text-anchor="middle">Blue</text>
+      <text class="tiny" x="0" y="40" text-anchor="middle">Muddy Gray</text>
+    </g>
+
+    <g transform="translate(60, 600)">
+      <rect width="580" height="60" rx="30" fill="url(#muddy)" class="glow" />
+      <rect width="580" height="60" class="bar-border" />
+      <text class="note" x="290" y="105" text-anchor="middle">Resulting Gradient Bar</text>
+    </g>
+  </g>
+
+  <g transform="translate(840, 60)">
+    <rect class="panel" width="700" height="780" />
+    <rect class="badge-good" x="40" y="40" width="130" height="28" />
+    <text class="badge-text" x="105" y="59" text-anchor="middle">BETTER PATH</text>
+    <text class="note" x="40" y="110">Detour through adjacent hues preserves saturation</text>
+
+    <!-- Color Wheel Abstraction -->
+    <g transform="translate(350, 340)">
+      <circle class="guide-ring" r="160" />
+      <path class="gradient-path" d="M -150 50 Q -90 -160 0 -160 Q 90 -160 150 -50" />
+      
+      <circle class="node glow" cx="-150" cy="50" r="16" fill="#FF6B00"/>
+      <circle class="node glow" cx="-60" cy="-148" r="16" fill="#FFD600"/>
+      <circle class="node glow" cx="60" cy="-148" r="16" fill="#00E5FF"/>
+      <circle class="node glow" cx="150" cy="-50" r="16" fill="#0066FF"/>
+      
+      <text class="tiny" x="-150" y="90" text-anchor="middle">Orange</text>
+      <text class="tiny" x="-80" y="-175" text-anchor="middle">Yellow</text>
+      <text class="tiny" x="80" y="-175" text-anchor="middle">Cyan</text>
+      <text class="tiny" x="150" y="-15" text-anchor="middle">Blue</text>
+    </g>
+
+    <g transform="translate(60, 600)">
+      <rect width="580" height="60" rx="30" fill="url(#clean)" class="glow" />
+      <rect width="580" height="60" class="bar-border" />
+      <text class="note" x="290" y="105" text-anchor="middle">Resulting Gradient Bar</text>
+    </g>
+  </g>
+</svg>

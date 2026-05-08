@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+  <defs>
+    <style><![CDATA[
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+      text { font-family: 'Inter', sans-serif; }
+      .bg { fill: #0B0E14; }
+      .card { fill: #131822; stroke: rgba(255,255,255,0.05); stroke-width: 2; rx: 24; }
+      .title { fill: #FFFFFF; font-size: 32px; font-weight: 800; letter-spacing: -0.5px; }
+      .subtitle { fill: #8A91A6; font-size: 18px; font-weight: 400; }
+      .rowlabel { fill: #5C657A; font-size: 14px; font-weight: 800; letter-spacing: 3px; }
+      .chiplabel { fill: #E2E8F0; font-size: 16px; font-weight: 700; }
+      .lumalabel { fill: #8A91A6; font-size: 14px; font-weight: 600; }
+      .chip { rx: 40; }
+      .connector { stroke: rgba(255,255,255,0.1); stroke-width: 2; stroke-dasharray: 4 6; fill: none; }
+      .glow-yellow { filter: drop-shadow(0px 8px 30px rgba(255,237,51,0.3)); }
+      .glow-green { filter: drop-shadow(0px 8px 30px rgba(166,255,51,0.3)); }
+      .glow-red { filter: drop-shadow(0px 8px 30px rgba(255,51,51,0.3)); }
+      .glow-blue { filter: drop-shadow(0px 8px 30px rgba(51,51,255,0.3)); }
+      .glow-violet { filter: drop-shadow(0px 8px 30px rgba(204,51,255,0.3)); }
+    ]]></style>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.02)" stroke-width="1"/>
+    </pattern>
+  </defs>
+  
+  <rect class="bg" width="1600" height="900" />
+  <rect width="1600" height="900" fill="url(#grid)" />
+  
+  <text class="title" x="800" y="80" text-anchor="middle">HSB VALUES VS PERCEIVED LIGHTNESS</text>
+  <text class="subtitle" x="800" y="115" text-anchor="middle">All top row colors share exactly HSB Brightness = 100%, Saturation = 80%</text>
+  
+  <!-- Top Row Box -->
+  <rect class="card" x="80" y="180" width="1440" height="300" />
+  <text class="rowlabel" x="120" y="225">SOFTWARE VALUES (HSB)</text>
+  <text class="lumalabel" x="1350" y="225">B: 100% / S: 80%</text>
+  
+  <!-- Bottom Row Box -->
+  <rect class="card" x="80" y="520" width="1440" height="300" />
+  <text class="rowlabel" x="120" y="565">HUMAN EYE PERCEPTION (GRAYSCALE)</text>
+  <text class="lumalabel" x="1360" y="565">LUMA (Y') VALUE</text>
+
+  <!-- Connectors -->
+  <g transform="translate(180, 0)">
+    <line class="connector" x1="100" y1="410" x2="100" y2="590" />
+    <line class="connector" x1="380" y1="410" x2="380" y2="590" />
+    <line class="connector" x1="660" y1="410" x2="660" y2="590" />
+    <line class="connector" x1="940" y1="410" x2="940" y2="590" />
+    <line class="connector" x1="1220" y1="410" x2="1220" y2="590" />
+
+    <!-- YELLOW -->
+    <rect class="chip glow-yellow" x="10" y="250" width="180" height="180" fill="#FFED33" />
+    <rect class="chip" x="10" y="590" width="180" height="180" fill="#DEDEDE" />
+    <text class="chiplabel" x="100" y="465" text-anchor="middle">Yellow</text>
+    <text class="lumalabel" x="100" y="805" text-anchor="middle">Luma: ~221</text>
+    <text class="lumalabel" x="100" y="830" text-anchor="middle" fill="#FFFFFF">Very Bright</text>
+
+    <!-- YELLOW-GREEN -->
+    <rect class="chip glow-green" x="290" y="250" width="180" height="180" fill="#A6FF33" />
+    <rect class="chip" x="290" y="590" width="180" height="180" fill="#CDCDCD" />
+    <text class="chiplabel" x="380" y="465" text-anchor="middle">Yellow-Green</text>
+    <text class="lumalabel" x="380" y="805" text-anchor="middle">Luma: ~205</text>
+    <text class="lumalabel" x="380" y="830" text-anchor="middle" fill="#FFFFFF">Bright</text>
+
+    <!-- RED -->
+    <rect class="chip glow-red" x="570" y="250" width="180" height="180" fill="#FF3333" />
+    <rect class="chip" x="570" y="590" width="180" height="180" fill="#707070" />
+    <text class="chiplabel" x="660" y="465" text-anchor="middle">Red</text>
+    <text class="lumalabel" x="660" y="805" text-anchor="middle">Luma: ~112</text>
+
+    <!-- BLUE -->
+    <rect class="chip glow-blue" x="850" y="250" width="180" height="180" fill="#3333FF" />
+    <rect class="chip" x="850" y="590" width="180" height="180" fill="#4A4A4A" />
+    <text class="chiplabel" x="940" y="465" text-anchor="middle">Blue</text>
+    <text class="lumalabel" x="940" y="805" text-anchor="middle">Luma: ~74</text>
+    <text class="lumalabel" x="940" y="830" text-anchor="middle" fill="#FFFFFF">Very Dark</text>
+
+    <!-- VIOLET -->
+    <rect class="chip glow-violet" x="1130" y="250" width="180" height="180" fill="#CC33FF" />
+    <rect class="chip" x="1130" y="590" width="180" height="180" fill="#787878" />
+    <text class="chiplabel" x="1220" y="465" text-anchor="middle">Violet</text>
+    <text class="lumalabel" x="1220" y="805" text-anchor="middle">Luma: ~120</text>
+    <text class="lumalabel" x="1220" y="830" text-anchor="middle" fill="#FFFFFF">Dark</text>
+  </g>
+</svg>

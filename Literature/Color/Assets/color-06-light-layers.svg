@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+  <defs>
+    <style><![CDATA[
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap');
+      text { font-family: 'Inter', sans-serif; }
+      .bg { fill: #0B0E14; }
+      .divider { stroke: rgba(255,255,255,0.05); stroke-width: 2; }
+      .title { fill: #FFFFFF; font-size: 20px; font-weight: 800; letter-spacing: 1px; }
+      .mesh { fill: #0D131C; stroke: rgba(255,255,255,0.05); stroke-width: 1; }
+      .cube-side-1 { fill: #101622; }
+      .cube-side-2 { fill: #1D263B; }
+      .cube-top { fill: #2A3655; }
+    ]]></style>
+
+    <filter id="blurGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="15" result="blur"/>
+    </filter>
+    <filter id="blurBloom" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="40" result="blur"/>
+    </filter>
+
+    <radialGradient id="bloomGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#00E5FF" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#00E5FF" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.8"/>
+      <stop offset="50%" stop-color="#00E5FF" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#00E5FF" stop-opacity="0"/>
+    </radialGradient>
+
+    <radialGradient id="floorLight" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+      <stop offset="0%" stop-color="#00E5FF" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#001133" stop-opacity="0"/>
+    </radialGradient>
+    
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.02)" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <rect class="bg" width="1600" height="900" />
+  <rect width="1600" height="900" fill="url(#grid)" />
+
+  <line class="divider" x1="400" y1="0" x2="400" y2="900" />
+  <line class="divider" x1="800" y1="0" x2="800" y2="900" />
+  <line class="divider" x1="1200" y1="0" x2="1200" y2="900" />
+
+  <g id="base-scene" opacity="1">
+    <path class="mesh" d="M 50 650 L 350 650 L 300 750 L 100 750 Z" />
+    <g transform="translate(140, 660)">
+      <polygon class="cube-side-1" points="0,0 30,10 30,40 0,30" />
+      <polygon class="cube-side-2" points="30,10 60,0 60,30 30,40" />
+      <polygon class="cube-top" points="0,0 30,-10 60,0 30,10" />
+    </g>
+  </g>
+
+  <!-- P1: Emission Only -->
+  <g transform="translate(0, 0)">
+    <use href="#base-scene" x="0" y="0" />
+    <circle cx="200" cy="400" r="40" fill="#E2F8FF" />
+    <text class="title" x="200" y="820" text-anchor="middle">1. EMISSION ONLY</text>
+  </g>
+
+  <!-- P2: Emission + Glow -->
+  <g transform="translate(400, 0)">
+    <use href="#base-scene" x="0" y="0" />
+    <circle cx="200" cy="400" r="80" fill="url(#glowGrad)" filter="url(#blurGlow)" />
+    <circle cx="200" cy="400" r="40" fill="#FFFFFF" />
+    <text class="title" x="200" y="820" text-anchor="middle">2. + GLOW</text>
+  </g>
+
+  <!-- P3: Emission + Bloom -->
+  <g transform="translate(800, 0)">
+    <use href="#base-scene" x="0" y="0" />
+    <circle cx="200" cy="400" r="180" fill="url(#bloomGrad)" filter="url(#blurBloom)" />
+    <circle cx="200" cy="400" r="80" fill="url(#glowGrad)" filter="url(#blurGlow)" />
+    <circle cx="200" cy="400" r="40" fill="#FFFFFF" />
+    <text class="title" x="200" y="820" text-anchor="middle">3. + BLOOM (LENS)</text>
+  </g>
+
+  <!-- P4: Scene Influence -->
+  <g transform="translate(1200, 0)">
+    <ellipse cx="200" cy="680" rx="160" ry="60" fill="url(#floorLight)" />
+    
+    <path class="mesh" d="M 50 650 L 350 650 L 300 750 L 100 750 Z" />
+    <g transform="translate(140, 660)">
+      <polygon class="cube-side-1" points="0,0 30,10 30,40 0,30" />
+      <polygon class="cube-side-2" points="30,10 60,0 60,30 30,40" />
+      <polygon class="cube-top" points="0,0 30,-10 60,0 30,10" fill="#3D5A80"/>
+      <polygon points="30,-10 40,-8 60,0 45,0" fill="#00E5FF"/>
+      <polygon points="60,0 55,2 60,30 60,30" fill="#00E5FF" opacity="0.6"/>
+    </g>
+
+    <circle cx="200" cy="400" r="180" fill="url(#bloomGrad)" filter="url(#blurBloom)" />
+    <circle cx="200" cy="400" r="80" fill="url(#glowGrad)" filter="url(#blurGlow)" />
+    <circle cx="200" cy="400" r="40" fill="#FFFFFF" />
+    
+    <text class="title" x="200" y="820" text-anchor="middle">4. + SCENE INFLUENCE</text>
+  </g>
+</svg>

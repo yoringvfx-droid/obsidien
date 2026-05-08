@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+  <defs>
+    <style><![CDATA[
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap');
+      text { font-family: 'Inter', sans-serif; }
+      .bg { fill: #0B0E14; }
+      .panel { fill: #131822; stroke: rgba(255,255,255,0.05); stroke-width: 2; rx: 32; }
+      .title { fill: #FFFFFF; font-size: 32px; font-weight: 800; letter-spacing: -0.5px; }
+      .badge-text { font-size: 14px; font-weight: 800; fill: #FFFFFF; letter-spacing: 2px; }
+      .badge-good { fill: #10B981; rx: 12; }
+      .badge-bad { fill: #EF4444; rx: 12; }
+      .scene-bg { rx: 20; ry: 20; stroke: rgba(255,255,255,0.1); stroke-width: 2; }
+      .label { fill: #5C657A; font-size: 14px; font-weight: 800; letter-spacing: 2px; }
+      .subtitle { fill: #8A91A6; font-size: 20px; font-weight: 700; }
+    ]]></style>
+    <filter id="true-gray">
+      <feColorMatrix type="matrix" values="0.299 0.587 0.114 0 0  0.299 0.587 0.114 0 0  0.299 0.587 0.114 0 0  0 0 0 1 0"/>
+    </filter>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.02)" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <rect class="bg" width="1600" height="900" />
+  <rect width="1600" height="900" fill="url(#grid)" />
+  <text class="title" x="800" y="50" text-anchor="middle">GRAYSCALE STRUCTURE CHECK</text>
+
+  <!-- Good Panel -->
+  <g transform="translate(60, 80)">
+    <rect class="panel" width="700" height="780" />
+    <rect class="badge-good" x="40" y="40" width="80" height="28" />
+    <text class="badge-text" x="80" y="59" text-anchor="middle">GOOD</text>
+    <text class="subtitle" x="135" y="61">Clear Value Hierarchy</text>
+
+    <text class="label" x="40" y="120">RAW COLOR</text>
+    <g transform="translate(40, 140)">
+      <rect class="scene-bg" width="620" height="260" fill="#0D1A30" />
+      <circle cx="150" cy="130" r="80" fill="#1A335E" />
+      <rect x="350" y="60" width="200" height="140" fill="#2E4A75" rx="30" />
+      <path d="M0 260 L0 180 Q 200 130 400 190 T 620 150 L620 260 Z" fill="#152442" />
+      <circle cx="450" cy="180" r="40" fill="#00E5FF" style="filter: drop-shadow(0px 0px 20px rgba(0,229,255,0.6));" />
+      <ellipse cx="450" cy="230" rx="45" ry="10" fill="#050C17" />
+    </g>
+
+    <text class="label" x="40" y="450">GRAYSCALE VIEW</text>
+    <g transform="translate(40, 470)" filter="url(#true-gray)">
+      <rect class="scene-bg" width="620" height="260" fill="#0D1A30" />
+      <circle cx="150" cy="130" r="80" fill="#1A335E" />
+      <rect x="350" y="60" width="200" height="140" fill="#2E4A75" rx="30" />
+      <path d="M0 260 L0 180 Q 200 130 400 190 T 620 150 L620 260 Z" fill="#152442" />
+      <circle cx="450" cy="180" r="40" fill="#00E5FF" />
+      <ellipse cx="450" cy="230" rx="45" ry="10" fill="#050C17" />
+    </g>
+  </g>
+
+  <!-- Bad Panel -->
+  <g transform="translate(840, 80)">
+    <rect class="panel" width="700" height="780" />
+    <rect class="badge-bad" x="40" y="40" width="70" height="28" />
+    <text class="badge-text" x="75" y="59" text-anchor="middle">BAD</text>
+    <text class="subtitle" x="125" y="61">Value Collapse (All mid-tones)</text>
+
+    <text class="label" x="40" y="120">RAW COLOR</text>
+    <g transform="translate(40, 140)">
+      <rect class="scene-bg" width="620" height="260" fill="#756D60" />
+      <circle cx="150" cy="130" r="80" fill="#6A8072" />
+      <rect x="350" y="60" width="200" height="140" fill="#786B85" rx="30" />
+      <path d="M0 260 L0 180 Q 200 130 400 190 T 620 150 L620 260 Z" fill="#5F6A7A" />
+      <circle cx="450" cy="180" r="40" fill="#825F60" />
+      <ellipse cx="450" cy="230" rx="45" ry="10" fill="#6A5A50" />
+    </g>
+
+    <text class="label" x="40" y="450">GRAYSCALE VIEW</text>
+    <g transform="translate(40, 470)" filter="url(#true-gray)">
+      <rect class="scene-bg" width="620" height="260" fill="#756D60" />
+      <circle cx="150" cy="130" r="80" fill="#6A8072" />
+      <rect x="350" y="60" width="200" height="140" fill="#786B85" rx="30" />
+      <path d="M0 260 L0 180 Q 200 130 400 190 T 620 150 L620 260 Z" fill="#5F6A7A" />
+      <circle cx="450" cy="180" r="40" fill="#825F60" />
+      <ellipse cx="450" cy="230" rx="45" ry="10" fill="#6A5A50" />
+    </g>
+  </g>
+</svg>

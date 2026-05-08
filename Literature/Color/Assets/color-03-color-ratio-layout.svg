@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+  <defs>
+    <style><![CDATA[
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap');
+      text { font-family: 'Inter', sans-serif; }
+      .bg { fill: #0B0E14; }
+      .panel { fill: #131822; stroke: rgba(255,255,255,0.05); stroke-width: 2; rx: 32; }
+      .title { fill: #FFFFFF; font-size: 28px; font-weight: 800; letter-spacing: -0.5px; }
+      .ratio-text { fill: #8A91A6; font-size: 14px; font-weight: 700; letter-spacing: 2px; }
+
+      .dominant { fill: #1D2E4A; }
+      .support { fill: #485A78; }
+      .accent { fill: #FF3D71; }
+      .accent-glow { filter: drop-shadow(0px 0px 24px rgba(255, 61, 113, 0.6)); }
+
+      .scene-bg { fill: #080C14; stroke: rgba(255,255,255,0.05); stroke-width: 2; rx: 20; }
+    ]]></style>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.02)" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <rect class="bg" width="1600" height="900" />
+  <rect width="1600" height="900" fill="url(#grid)" />
+
+  <!-- Stable -->
+  <g transform="translate(60, 60)">
+    <rect class="panel" width="700" height="780" />
+    <text class="title" x="50" y="70">STABLE STRUCTURE</text>
+    <text class="ratio-text" x="50" y="100">DOMINANT (75%) : SUPPORT (20%) : ACCENT (5%)</text>
+    
+    <g transform="translate(50, 140)">
+      <rect width="600" height="580" class="scene-bg" />
+      <rect x="0" y="0" width="600" height="580" rx="20" class="dominant" />
+      
+      <path d="M0 400 L 150 350 L 300 450 L 450 380 L 600 480 L 600 580 L 0 580 Z" class="support" />
+      <polygon points="100,200 150,150 200,250 120,300" class="support" opacity="0.8" />
+      <polygon points="450,150 520,80 580,220 480,280" class="support" opacity="0.6" />
+      <path d="M200 580 L 250 480 L 400 480 L 450 580 Z" fill="#2E3D59" />
+
+      <!-- Minimal Accent -->
+      <circle cx="320" cy="360" r="16" class="accent accent-glow" />
+      <polygon points="320,320 330,350 360,360 330,370 320,400 310,370 280,360 310,350" class="accent accent-glow" />
+    </g>
+  </g>
+
+  <!-- Unstable -->
+  <g transform="translate(840, 60)">
+    <rect class="panel" width="700" height="780" />
+    <text class="title" x="50" y="70">UNSTABLE STRUCTURE</text>
+    <text class="ratio-text" x="50" y="100">EXCESSIVE ACCENT CAUSES VISUAL FATIGUE</text>
+
+    <g transform="translate(50, 140)">
+      <rect width="600" height="580" class="scene-bg" />
+      <rect x="0" y="0" width="600" height="580" rx="20" class="dominant" />
+      
+      <path d="M0 400 L 150 350 L 300 450 L 450 380 L 600 480 L 600 580 L 0 580 Z" class="support" />
+      
+      <!-- Overwhelming Accents -->
+      <circle cx="320" cy="360" r="16" class="accent accent-glow" />
+      <polygon points="320,320 330,350 360,360 330,370 320,400 310,370 280,360 310,350" class="accent accent-glow" />
+      
+      <polygon points="100,200 150,150 200,250 120,300" class="accent accent-glow" opacity="0.9" />
+      <polygon points="450,150 520,80 580,220 480,280" class="accent accent-glow" opacity="0.9" />
+      <path d="M200 580 L 250 480 L 400 480 L 450 580 Z" class="accent accent-glow" opacity="0.9" />
+      
+      <circle cx="80" cy="100" r="24" class="accent" opacity="0.8" />
+      <circle cx="500" cy="450" r="18" class="accent" opacity="0.7" />
+      <circle cx="150" cy="500" r="30" class="accent" opacity="0.8" />
+      <polygon points="320,80 350,150 260,180" class="accent" opacity="0.8" />
+    </g>
+  </g>
+</svg>
