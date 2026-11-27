@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 520" font-family="Noto Sans KR, Inter, sans-serif">
+  <defs>
+    <linearGradient id="tail" x1="1" y1="0" x2="0" y2="0">
+      <stop offset="0" stop-color="#ffd9c4"/><stop offset=".25" stop-color="#fa9785"/><stop offset=".6" stop-color="#fb4a5d"/><stop offset="1" stop-color="#fc345d" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="glow"><stop offset="0" stop-color="#ffffff"/><stop offset=".45" stop-color="#ffd2bf"/><stop offset="1" stop-color="#f9ab8c" stop-opacity="0"/></radialGradient>
+  </defs>
+  <rect width="960" height="520" rx="22" fill="#0B0E14"/>
+  <text x="32" y="44" fill="#fff" font-size="22" font-weight="800">투사체 해부 · 실측 2건(星光啊 혜성, 放晴 하트)</text>
+  <text x="32" y="70" fill="#8A91A6" font-size="13">머리가 1차, 몸통·꼬리가 2차, 입자가 3차. 숫자는 두 사례의 범위. 길이는 화면 가로 폭 대비</text>
+  <!-- direction -->
+  <line x1="150" y1="200" x2="860" y2="200" stroke="rgba(255,255,255,.12)" stroke-width="1.5" stroke-dasharray="6 6"/>
+  <polygon points="868,200 852,192 852,208" fill="rgba(255,255,255,.35)"/>
+  <!-- tail ribbon -->
+  <path d="M700 186 C 560 182, 380 196, 170 212 C 380 210, 560 214, 700 214 Z" fill="url(#tail)"/>
+  <!-- particles -->
+  <g fill="#fc4b8a"><circle cx="300" cy="226" r="3"/><circle cx="250" cy="196" r="2.2"/><circle cx="380" cy="230" r="2.5"/><circle cx="210" cy="222" r="1.8"/></g>
+  <!-- head -->
+  <circle cx="712" cy="200" r="46" fill="url(#glow)" opacity=".8"/>
+  <circle cx="712" cy="200" r="20" fill="#fff" stroke="#ffb3a0" stroke-width="3"/>
+  <!-- labels -->
+  <g font-size="13">
+    <line x1="712" y1="150" x2="712" y2="132" stroke="#F5B841"/><text x="712" y="104" fill="#F5B841" font-weight="800" text-anchor="middle" font-size="15">머리 · 1차</text>
+    <text x="712" y="122" fill="#D3D8E2" text-anchor="middle">가장 밝다 · 덜 진하다</text>
+    <line x1="470" y1="196" x2="470" y2="132" stroke="#8A91A6"/><text x="470" y="100" fill="#fff" font-weight="800" text-anchor="middle" font-size="15">몸통 · 꼬리 · 2차</text>
+    <text x="470" y="122" fill="#D3D8E2" text-anchor="middle">끝으로 갈수록 어둡고 진해진다</text>
+    <line x1="300" y1="232" x2="300" y2="268" stroke="#8A91A6"/><text x="300" y="286" fill="#fff" font-weight="800" text-anchor="middle" font-size="15">입자 · 3차</text>
+    <text x="300" y="306" fill="#D3D8E2" text-anchor="middle">꼬리 끝에 몇 개만</text>
+  </g>
+  <!-- metric cards -->
+  <g font-size="12.5">
+    <rect x="32" y="336" width="214" height="94" rx="12" fill="#131822" stroke="rgba(255,255,255,.08)"/>
+    <text x="48" y="362" fill="#F5B841" font-weight="800">형태감</text>
+    <text x="48" y="386" fill="#D3D8E2">길이 6.5–8.7% · 두께 1.9–2.8%</text>
+    <text x="48" y="408" fill="#D3D8E2">길이÷두께 2.1(무리) – 4.1(한 발)</text>
+    <rect x="258" y="336" width="214" height="94" rx="12" fill="#131822" stroke="rgba(255,255,255,.08)"/>
+    <text x="274" y="362" fill="#F5B841" font-weight="800">질감</text>
+    <text x="274" y="386" fill="#D3D8E2">하트: 머리 윤곽 1.8배 또렷</text>
+    <text x="274" y="408" fill="#D3D8E2">혜성: 반대(머리가 번짐)</text>
+    <rect x="484" y="336" width="214" height="94" rx="12" fill="#131822" stroke="rgba(255,255,255,.08)"/>
+    <text x="500" y="362" fill="#F5B841" font-weight="800">컬러 변화</text>
+    <text x="500" y="386" fill="#D3D8E2">머리→꼬리 명도 −14 ~ −42</text>
+    <text x="500" y="408" fill="#D3D8E2">선명도 +3 ~ +74 · 색상 8–32° 이동</text>
+    <rect x="710" y="336" width="218" height="94" rx="12" fill="#131822" stroke="rgba(255,255,255,.08)"/>
+    <text x="726" y="362" fill="#F5B841" font-weight="800">쉐입</text>
+    <text x="726" y="386" fill="#D3D8E2">머리에 모티프(하트 · 4각 별)</text>
+    <text x="726" y="408" fill="#D3D8E2">몸통은 한 줄 리본, 끝은 가늘게</text>
+  </g>
+  <!-- timeline -->
+  <g font-size="12.5">
+    <rect x="32" y="454" width="90" height="34" rx="8" fill="#F5B841" opacity=".85"/><text x="77" y="476" fill="#0B0E14" font-weight="800" text-anchor="middle">발사</text>
+    <rect x="128" y="454" width="520" height="34" rx="8" fill="#2b3550"/><text x="388" y="476" fill="#D3D8E2" text-anchor="middle">비행 0.25–0.82s · 화면 0.6–0.9배/초</text>
+    <rect x="654" y="454" width="54" height="34" rx="8" fill="#0B0E14" stroke="#F5B841" stroke-width="1.5"/><text x="681" y="476" fill="#F5B841" font-weight="800" text-anchor="middle">2f</text>
+    <rect x="714" y="454" width="214" height="34" rx="8" fill="#fff"/><text x="821" y="476" fill="#0B0E14" font-weight="800" text-anchor="middle">착탄 · 발사의 면적 2–5배</text>
+    <text x="681" y="508" fill="#8A91A6" text-anchor="middle" font-size="11.5">착탄 직전 밝기 하락</text>
+  </g>
+</svg>

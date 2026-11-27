@@ -1,0 +1,15 @@
+const chromium=require('@sparticuz/chromium'),puppeteer=require('puppeteer-core'),path=require('path'),fs=require('fs');
+const [,,file,out]=process.argv;
+(async()=>{const b=await puppeteer.launch({executablePath:await chromium.executablePath(),args:[...chromium.args,'--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader'],headless:true});
+const p=await b.newPage();await p.setViewport({width:1400,height:1000});const errs=[];p.on('pageerror',e=>errs.push('PE '+e.message));
+await p.goto('file://'+path.resolve(file),{waitUntil:'load'});await new Promise(r=>setTimeout(r,800));fs.mkdirSync(out,{recursive:true});
+const st=await p.$('#stage');const W=ms=>new Promise(r=>setTimeout(r,ms));const shot=async n=>{await W(420);await st.screenshot({path:path.join(out,n+'.jpg'),type:'jpeg',quality:82})};
+await p.evaluate(()=>{ARENA.pause(true);ARENA.story.title()});await shot('a_title');
+await p.evaluate(()=>{ARENA.story.start(0)});await shot('b_card');
+await p.evaluate(()=>{cardDone()});
+const step=async(n,tag)=>{for(let i=0;i<n;i++)await p.evaluate(()=>{STORY.typed=999;advance()});await p.evaluate(()=>{if(STORY.talk){STORY.typed=999;$('dlgTxt').textContent=STORY.talk.text}});await shot(tag)};
+await step(0,'c_l1');await step(3,'c_l4');await step(1,'c_l5');await step(3,'c_l8');
+await p.evaluate(()=>{ARENA.story.skip();ARENA.story.start(2);cardDone()});await step(4,'d_ch3');
+await p.evaluate(()=>{ARENA.story.skip();for(const e of enemies)damage(e,9e9,'',null);STORY.kills=STORY.need;STORY.queue=[];for(let i=0;i<5;i++)simStep()});await step(0,'e_boss');await step(2,'e_boss2');
+await p.evaluate(()=>{ARENA.story.skip();ARENA.story.start(3);cardDone()});await step(7,'f_ch4');
+console.log('errs',errs);await b.close()})();

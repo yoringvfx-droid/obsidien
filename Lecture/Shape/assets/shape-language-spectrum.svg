@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="900" viewBox="0 0 1400 900">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f7f3ea"/>
+      <stop offset="100%" stop-color="#e8efe9"/>
+    </linearGradient>
+    <style>
+      .title { font: 700 44px 'Malgun Gothic', 'Segoe UI', sans-serif; fill: #162025; }
+      .subtitle { font: 400 22px 'Malgun Gothic', 'Segoe UI', sans-serif; fill: #44535c; }
+      .card { fill: rgba(255,255,255,0.78); stroke: #c9d3ce; stroke-width: 2; }
+      .h { font: 700 25px 'Malgun Gothic', 'Segoe UI', sans-serif; fill: #162025; }
+      .b { font: 400 19px 'Malgun Gothic', 'Segoe UI', sans-serif; fill: #324047; }
+      .small { font: 400 17px 'Malgun Gothic', 'Segoe UI', sans-serif; fill: #5e6b72; }
+    </style>
+  </defs>
+
+  <rect width="1400" height="900" fill="url(#bg)"/>
+  <text x="80" y="90" class="title">게임 VFX 형태 언어</text>
+  <text x="80" y="130" class="subtitle">안전함에서 위협으로, 안정에서 혼돈으로: 노트에서 종합한 핵심 감정 스펙트럼</text>
+
+  <rect x="70" y="180" rx="28" ry="28" width="280" height="600" class="card"/>
+  <circle cx="210" cy="330" r="90" fill="#8fd3c7"/>
+  <text x="210" y="470" text-anchor="middle" class="h">원 / 곡선</text>
+  <text x="210" y="520" text-anchor="middle" class="b">안전, 편안함, 치유</text>
+  <text x="210" y="555" text-anchor="middle" class="b">감싸기, 지원</text>
+  <text x="210" y="620" text-anchor="middle" class="small">버프, 실드, 안전 구역</text>
+
+  <rect x="390" y="180" rx="28" ry="28" width="280" height="600" class="card"/>
+  <rect x="470" y="250" width="120" height="120" rx="10" ry="10" fill="#87a8d0"/>
+  <text x="530" y="470" text-anchor="middle" class="h">사각형 / 블록</text>
+  <text x="530" y="520" text-anchor="middle" class="b">안정, 무게, 방어</text>
+  <text x="530" y="555" text-anchor="middle" class="b">구조, 신뢰성</text>
+  <text x="530" y="620" text-anchor="middle" class="small">탱커, 요새화, 접지된 힘</text>
+
+  <rect x="710" y="180" rx="28" ry="28" width="280" height="600" class="card"/>
+  <line x1="800" y1="370" x2="900" y2="270" stroke="#ef9f4d" stroke-width="18" stroke-linecap="round"/>
+  <polygon points="900,270 860,278 892,310" fill="#ef9f4d"/>
+  <text x="850" y="470" text-anchor="middle" class="h">선 / 대각선</text>
+  <text x="850" y="520" text-anchor="middle" class="b">속도, 조준, 방향</text>
+  <text x="850" y="555" text-anchor="middle" class="b">집중, 궤적</text>
+  <text x="850" y="620" text-anchor="middle" class="small">투사체, 빔, 모션 트레일</text>
+
+  <rect x="1030" y="180" rx="28" ry="28" width="300" height="600" class="card"/>
+  <polygon points="1180,235 1245,380 1115,380" fill="#d85d5d"/>
+  <path d="M1110 600 C1140 540, 1200 660, 1230 580 C1250 525, 1280 610, 1270 665 C1230 710, 1150 720, 1105 675 C1090 650, 1090 625, 1110 600 Z" fill="#5d6b73"/>
+  <text x="1180" y="470" text-anchor="middle" class="h">삼각형 / 불규칙</text>
+  <text x="1180" y="520" text-anchor="middle" class="b">위험, 공격성, 혼돈</text>
+  <text x="1180" y="555" text-anchor="middle" class="b">악의, 타락, 불안정</text>
+  <text x="1180" y="620" text-anchor="middle" class="small">피해, 어둠 마법, 위험 지대</text>
+
+  <path d="M180 815 C430 845, 790 845, 1245 815" fill="none" stroke="#70858c" stroke-width="4" stroke-dasharray="10 10"/>
+  <text x="220" y="860" class="small">더 안전 / 고요</text>
+  <text x="1120" y="860" class="small">더 위협 / 혼돈</text>
+</svg>

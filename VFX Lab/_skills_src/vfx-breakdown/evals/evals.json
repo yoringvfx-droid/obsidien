@@ -1,0 +1,11 @@
+{
+  "skill_name": "vfx-breakdown",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "이 영상을 스킬로 분석 진행해줘",
+      "expected_output": "업로드한 새 레퍼런스 영상을 측정해서 星光啊 분석 페이지와 같은 양식(플레이어+4행 타임라인, 타이밍→밸류→컬러→형태→적용 섹션, 카드형 도식)의 단일 HTML을 만들고, Effect Breakdown/<작품>/에 Index.md·assets·HTML을 정리하고, 핸드북 반영안 표를 제시한 뒤 승인 대기에서 멈춘다.",
+      "files": ["<업로드된 테스트 영상>"]
+    }
+  ]
+}

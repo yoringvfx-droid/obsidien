@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>투사체 실험실</title>
+<style>
+/* VFX Handbook v2 기반 투사체 + 착탄 실험실. 분석 페이지와 같은 다크 네이비 패널 언어. */
+:root{color-scheme:dark;--bg:#0B0E14;--panel:#131822;--panel-2:#1A2030;--sunk:#0E121A;--line:rgba(255,255,255,.07);--line-2:rgba(255,255,255,.14);
+--fg:#fff;--text:#D3D8E2;--muted:#8A91A6;--faint:#5C6478;--amber:#F5B841;--amber-dim:rgba(245,184,65,.15);--good:#10B981;--bad:#EF4444;--warn:#E0A03A;
+--font:"Noto Sans KR","Inter",system-ui,sans-serif;--mono:"JetBrains Mono",ui-monospace,Menlo,monospace}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:14px/1.55 var(--font);-webkit-font-smoothing:antialiased}
+.wrap{max-width:1320px;margin:0 auto;padding:22px clamp(12px,3vw,28px) 60px}
+h1{margin:0;color:var(--fg);font:800 clamp(22px,3vw,30px)/1.2 var(--font)}
+.sub{color:var(--muted);margin:6px 0 18px;font-size:13.5px}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:16px;align-items:start}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:14px;min-width:0}
+.stage{display:grid;gap:10px}
+.views{display:grid;gap:10px;grid-template-columns:1fr}
+.views.ab{grid-template-columns:1fr 1fr}
+.vw{position:relative;border-radius:12px;overflow:hidden;background:#000}
+.vw canvas{display:block;width:100%;height:auto}
+.vw .lbl{position:absolute;left:8px;top:8px;font:700 11px/1 var(--font);background:rgba(11,14,20,.75);color:var(--fg);padding:5px 8px;border-radius:6px}
+.bar{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.btn{font:600 12.5px/1 var(--font);color:var(--text);background:var(--panel-2);border:1px solid var(--line-2);border-radius:8px;padding:8px 11px;cursor:pointer}
+.btn:hover{border-color:rgba(255,255,255,.3)}.btn.on{background:var(--fg);color:#0B0E14;border-color:var(--fg)}
+.btn.amber{background:var(--amber);color:#111;border-color:var(--amber)}
+.sep{width:1px;height:24px;background:var(--line-2);margin:0 4px}
+.fr{font:700 13px/1 var(--mono);color:var(--fg);min-width:150px}
+input[type=range]{accent-color:var(--amber)}
+.scrub{width:100%}
+.tl{width:100%;height:84px;display:block}
+.ph{font:600 12px/1.4 var(--font);color:var(--muted)}
+.side{display:grid;gap:12px}
+.sec h3{margin:0 0 8px;font:800 13px/1 var(--font);color:var(--amber);letter-spacing:.04em}
+.opt{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;padding:8px 0;border-top:1px solid var(--line)}
+.opt:first-of-type{border-top:0}
+.opt input[type=checkbox]{width:16px;height:16px;margin-top:2px;accent-color:var(--amber)}
+.opt b{font:700 13px/1.35 var(--font);color:var(--fg)}
+.opt p{grid-column:2;margin:0;font-size:12px;color:var(--muted);line-height:1.5}
+.opt .cd{grid-column:2;font:600 10.5px/1.3 var(--font);color:var(--faint)}
+.sl{display:grid;grid-template-columns:96px 1fr 46px;gap:8px;align-items:center;padding:5px 0;font-size:12.5px}
+.sl span:last-child{font:600 12px/1 var(--mono);color:var(--fg);text-align:right}
+select{font:600 12.5px var(--font);background:var(--panel-2);color:var(--text);border:1px solid var(--line-2);border-radius:8px;padding:6px 8px}
+.chk{display:grid;gap:6px;grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
+.ck{display:grid;grid-template-columns:22px minmax(0,1fr) auto;gap:8px;align-items:start;background:var(--sunk);border:1px solid var(--line);border-radius:10px;padding:9px 10px}
+.ck i{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font:800 12px/1 var(--font);color:#0B0E14;font-style:normal}
+.ck i.p{background:var(--good)}.ck i.f{background:var(--bad);color:#fff}.ck i.w{background:var(--warn)}
+.ck b{font:700 12.5px/1.35 var(--font);color:var(--fg);display:block}.ck small{font-size:11.5px;color:var(--muted);line-height:1.45;display:block}
+.ck em{font:700 12px/1.2 var(--mono);color:var(--fg);font-style:normal;white-space:nowrap;text-align:right}
+.ck em s{display:block;text-decoration:none;font:600 10.5px/1.3 var(--mono);color:var(--faint)}
+.score{display:flex;gap:10px;align-items:baseline;margin-bottom:8px}.score b{font:800 22px/1 var(--mono);color:var(--fg)}.score span{color:var(--muted);font-size:12.5px}
+.note{font-size:12px;color:var(--muted);line-height:1.55}
+.note b{color:var(--text)}
+@media (max-width:1000px){.grid{grid-template-columns:minmax(0,1fr)}.views.ab{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>투사체 실험실</h1>
+  <p class="sub">VFX Handbook v2의 투사체 원리를 스위치로 켜고 끄며 만들어 보는 곳. 아래 <b>핸드북 검사</b>가 렌더된 픽셀을 직접 재서 기준을 통과하는지 알려준다(분석 스킬과 같은 측정 방식). 60fps 기준.</p>
+  <div class="grid">
+    <div class="stage">
+      <div class="card">
+        <div class="views" id="views">
+          <div class="vw"><canvas id="cvA" width="960" height="540"></canvas><span class="lbl" id="lblA">현재 설정</span></div>
+          <div class="vw" id="vwB" hidden><canvas id="cvB" width="960" height="540"></canvas><span class="lbl">B · 비교용</span></div>
+        </div>
+        <div class="bar" style="margin-top:10px">
+          <button class="btn" id="play">▶ 재생</button>
+          <button class="btn" id="prev">◀ 1f</button><button class="btn" id="next">1f ▶</button>
+          <span class="sep"></span>
+          <button class="btn on" data-sp="1">1×</button><button class="btn" data-sp=".5">½×</button><button class="btn" data-sp=".25">¼×</button>
+          <span class="sep"></span>
+          <button class="btn on" data-vm="color">컬러</button><button class="btn" data-vm="gray">흑백</button><button class="btn" data-vm="value">밸류 4단</button>
+          <span class="sep"></span>
+          <span class="fr" id="fr">F0</span>
+        </div>
+        <input type="range" class="scrub" id="scrub" min="0" max="100" value="0">
+        <canvas class="tl" id="tl" width="1200" height="84"></canvas>
+        <div class="ph" id="ph"></div>
+      </div>
+      <div class="card">
+        <div class="bar">
+          <button class="btn amber" id="presetOn">핸드북 기준으로</button>
+          <button class="btn" id="presetOff">원리 전부 끄기</button>
+          <span class="sep"></span>
+          <button class="btn" id="saveB">지금 설정을 B에 저장</button>
+          <button class="btn" id="abBtn">A/B 나란히 보기</button>
+          <span class="sep"></span>
+          <button class="btn" id="rec">영상 저장(webm)</button>
+          <button class="btn" id="png">이 프레임 PNG</button>
+          <button class="btn" id="json">설정 JSON 복사</button>
+        </div>
+        <p class="note" style="margin:10px 0 0">영상으로 저장하면 RefVault에 넣거나 분석 스킬로 다시 분해할 수 있다. 설정 JSON은 같은 이펙트를 다시 불러올 때 쓴다(아래 칸에 붙여 넣기).</p>
+        <div class="bar" style="margin-top:8px"><input id="jsonIn" placeholder="설정 JSON 붙여 넣기" style="flex:1;min-width:200px;font:12px var(--mono);background:var(--sunk);color:var(--text);border:1px solid var(--line-2);border-radius:8px;padding:8px"><button class="btn" id="load">불러오기</button></div>
+      </div>
+      <div class="card" id="checkCard"><div class="sec"><h3>핸드북 검사</h3><div class="score" id="score"></div><div class="chk" id="checks"></div>
+        <p class="note" style="margin-top:8px">모든 값은 렌더된 화면을 320×180으로 줄여 명도(L*)·선명도(C*)로 잰다. 분석 스킬의 measure.py·projectile.py와 같은 정의다. 기준 숫자는 실측 사례 2–3건에서 나온 잠정값이다.</p></div></div>
+    </div>
+    <div class="side">
+      <div class="card" id="controls"></div>
+    </div>
+  </div>
+</div>
+<script>
+'use strict';
+// ================= 색: 명도(L*)·선명도(C*)·색상(h)으로 만든다 =================
+const lin=v=>v<=.04045?v/12.92:Math.pow((v+.055)/1.055,2.4), gam=v=>v<=.0031308?12.92*v:1.055*Math.pow(v,1/2.4)-.055;
+function lab2rgb(L,a,b){const fy=(L+16)/116,fx=fy+a/500,fz=fy-b/200,inv=t=>t**3>.008856?t**3:(t-16/116)/7.787;
+  const X=inv(fx)*.95047,Y=inv(fy),Z=inv(fz)*1.08883;return [3.2406*X-1.5372*Y-.4986*Z,-.9689*X+1.8758*Y+.0415*Z,.0557*X-.204*Y+1.057*Z].map(gam)}
+function lch(L,C,h){ // 색역 밖이면 명도는 지키고 선명도만 줄인다
+  let lo=0,hi=C,rgb=null;const t=h*Math.PI/180;
+  for(let i=0;i<18;i++){const c=i?(lo+hi)/2:C,r=lab2rgb(L,c*Math.cos(t),c*Math.sin(t));if(r.every(v=>v>=-1e-4&&v<=1+1e-4)){rgb=r;lo=c;if(!i)break}else hi=c}
+  if(!rgb)rgb=lab2rgb(L,0,0);return rgb.map(v=>Math.round(Math.max(0,Math.min(1,v))*255))}
+function hsv(h,s,v){const f=n=>{const k=(n+h/60)%6;return v-v*s*Math.max(0,Math.min(k,4-k,1))};return [f(5),f(3),f(1)].map(x=>Math.round(x*255))}
+const LIN=new Float32Array(256).map((_,i)=>lin(i/255));
+function rgb2lab(r,g,b){const R=LIN[r],G=LIN[g],B=LIN[b];const X=(R*.4124+G*.3576+B*.1805)/.95047,Y=R*.2126+G*.7152+B*.0722,Z=(R*.0193+G*.1192+B*.9505)/1.08883;
+  const f=t=>t>.008856?Math.cbrt(t):7.787*t+16/116;const L=116*f(Y)-16,a=500*(f(X)-f(Y)),bb=200*(f(Y)-f(Z));return [L,a,bb,Y]}
+// 화면의 '색상(°)'은 핸드북 색상환(HSV: 0 빨강 · 60 노랑 · 120 초록 · 180 청록 · 240 파랑 · 300 자홍). 램프는 Lab 색상각으로 바꿔 만든다
+const LABH=Array.from({length:360},(_,h)=>{const c=hsv(h,1,1),l=rgb2lab(c[0],c[1],c[2]);return (Math.atan2(l[2],l[1])*180/Math.PI+360)%360});
+const labH=h=>{h=((h%360)+360)%360;const a=Math.floor(h),b=(a+1)%360,t=h-a,d=((LABH[b]-LABH[a]+540)%360)-180;return (LABH[a]+d*t+360)%360};
+const css=(c,a=1)=>`rgba(${c[0]},${c[1]},${c[2]},${a})`, mix=(a,b,t)=>a.map((v,i)=>Math.round(v+(b[i]-v)*t));
+
+// ================= 설정 =================
+const PRINCIPLES=[
+ // [키, 렌즈, 이름, 설명, 근거 카드]
+ ['ramp','컬러','머리는 밝고, 꼬리는 어둡고 진하게','몸통을 따라 명도를 내리고 선명도는 올린다. 끄면 한 색에 투명도만 빠진다.','투사체 — 유형 노트 · 램프'],
+ ['lchRamp','컬러','램프를 명도 기준으로 만들기','코어·바디·엣지·헤이즈 명도를 95 / 70 / 46 / 30으로 고정하고 색상만 바꾼다(어두운 단계일수록 선명도는 높게). 끄면 색 선택기(HSV) 값으로 만들어 색마다 명도가 흔들린다.','색이 바뀌어도 밸류는 고정 · 숫자 ≠ 지각명도'],
+ ['tintCore','컬러','코어는 색을 품은 백색','코어에 선명도 10 안팎을 남긴다. 끄면 순백.','코어는 색을 품은 백색'],
+ ['hueShift','컬러','밝기 따라 색상 이동','어두운 단계일수록 색상을 돌린다. 따뜻한 색은 빨강·자주 쪽, 시안·파랑은 더 깊은 파랑 쪽(실측: 하트 노랑→빨강→자주, 혜성 하늘→파랑). 끄면 한 색상.','램프 — 밝기 따라 색상 이동'],
+ ['darkEnv','컬러','어두운 끝은 바닥색 쪽으로','헤이즈·연기의 색상을 바닥 색상 쪽으로 기울인다.','램프 — 밝기 따라 색상 이동'],
+ ['hardHead','질감','하드한 머리, 소프트한 꼬리','머리 윤곽은 또렷하게, 꼬리는 번지게. 끄면 머리도 번진다.','하드·소프트 엣지 · 투사체 — 유형 노트'],
+ ['motif','쉐입','머리에 모티프','머리 실루엣을 모양으로 만든다(아래에서 고름). 끄면 둥근 점.','모티프와 형태 문법 · 실루엣과 가독성'],
+ ['dip','타이밍','착탄 직전 밝기 누르기','착탄 직전 몇 프레임 동안 밝기를 뺀다.','피크 앞 밝기 누르기'],
+ ['bigImpact','형태감','착탄은 발사보다 크게','착탄 섬광·충격파를 발사보다 크게(아래 배수).','시간적 위계 · 투사체 — 유형 노트'],
+ ['impactFrame','타이밍','임팩트 프레임 1f','착탄 1f를 흑백 극단 밸류로 바꾼다. 섬광 횟수 검사를 같이 본다.','임팩트 프레임'],
+ ['sceneLight','컬러','장면에 남는 빛','착탄 때 바닥이 물들고 약 1초에 돌아온다.','빛의 4층위 · 소멸과 여운'],
+];
+const DEF={hue:320,floorL:20,floorHue:214,flight:45,curve:.45,trail:24,headSize:13,core:.32,launchScale:1,impactRatio:3,dipLen:2,sparks:16,motifShape:'heart',
+  ramp:true,lchRamp:true,hueShift:true,tintCore:true,darkEnv:true,hardHead:true,motif:true,dip:true,bigImpact:true,impactFrame:false,sceneLight:true};
+const OFF={...DEF};PRINCIPLES.forEach(p=>OFF[p[0]]=false);
+let P={...DEF},PB={...OFF};
+const SL=[['hue','색상(°)',0,359,1],['floorL','바닥 명도',8,60,1],['flight','비행(f)',20,90,1],['curve','궤적 휨',0,1,.05],['trail','꼬리 길이(%)',6,45,1],['headSize','머리 크기',6,26,1],['core','코어 크기',.1,.8,.02],['impactRatio','착탄 배수',.6,5,.1],['dipLen','누르기(f)',1,4,1],['sparks','불꽃 수',0,32,1]];
+const PRESET_HUES=[['핑크',320],['파랑',225],['불',25],['독',110],['물',195],['빛',52]];
+
+// ================= 타임라인 =================
+const W=960,H=540,FPS=60;
+const T=p=>{const Fc=0,Fl=12,Fi=Fl+5+p.flight;return {Fc,Fl,Fi,N:Fi+72}};
+const CASTER=[170,390],TARGET=[790,290];
+function rnd(seed){let a=seed>>>0;return()=>{a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function bez(t,p){const c=[(CASTER[0]+TARGET[0])/2,Math.min(CASTER[1],TARGET[1])-60-p.curve*300],u=1-t;return [u*u*CASTER[0]+2*u*t*c[0]+t*t*TARGET[0],u*u*CASTER[1]+2*u*t*c[1]+t*t*TARGET[1]]}
+
+// 램프 4단 (코어·바디·엣지·헤이즈) — 명도 기준 또는 HSV 기준
+function ramps(p){const h0=p.hue,fh=p.floorHue,toward=(a,b,t)=>{let d=((b-a+540)%360)-180;return (a+d*t+360)%360};
+  // 밝기 따라 색상 이동: 따뜻한 색(20–110°)은 어두울수록 빨강 쪽(−), 시안·파랑(150–260°)은 깊은 파랑 쪽(+)
+  const sh=!p.hueShift?[0,0]:(h0>=20&&h0<=110)?[-28,-52]:(h0>=150&&h0<=260)?[14,28]:[-10,-20];const h=h0,hE=(h0+sh[0]+360)%360,hH=(h0+sh[1]+360)%360;
+  if(p.lchRamp){const eh=p.darkEnv?toward(hE,fh,.15):hE,hh=p.darkEnv?toward(hH,fh,.4):hH;
+    return {core:lch(95,p.tintCore?11:0,labH(h)),body:lch(70,58,labH(h)),edge:lch(46,64,labH(eh)),haze:lch(30,46,labH(hh))}}
+  // HSV 방식: 같은 S·V 계단. 색상마다 실제 명도가 달라진다
+  const hv=(h+360)%360,eh=p.darkEnv?toward(hE,fh,.15):hE,hh=p.darkEnv?toward(hH,fh,.4):hH;
+  return {core:p.tintCore?hsv(hv,.12,1):[255,255,255],body:hsv(hv,.85,1),edge:hsv(eh,.85,.7),haze:hsv(hh,.8,.42)}}
+function floorCol(p){return lch(p.floorL,8,labH(p.floorHue))}
+
+// ================= 그리기 =================
+const LAYERS={};function layerFor(s){const k=String(s);if(!LAYERS[k]){const cv=document.createElement('canvas');cv.width=Math.round(W*s);cv.height=Math.round(H*s);LAYERS[k]=cv}return LAYERS[k]}
+function motifPath(c,x,y,r,ang,shape){c.beginPath();
+  if(shape==='heart'){c.save();c.translate(x,y);c.rotate(ang+Math.PI/2);const s=r/1.1;c.moveTo(0,s*.9);c.bezierCurveTo(-s*1.6,-s*.1,-s*.8,-s*1.4,0,-s*.5);c.bezierCurveTo(s*.8,-s*1.4,s*1.6,-s*.1,0,s*.9);c.restore()}
+  else if(shape==='star'){for(let i=0;i<8;i++){const a=ang+i*Math.PI/4,rr=i%2?r*.38:r*1.25;c.lineTo(x+Math.cos(a)*rr,y+Math.sin(a)*rr)}c.closePath()}
+  else if(shape==='diamond'){c.moveTo(x+Math.cos(ang)*r*1.5,y+Math.sin(ang)*r*1.5);c.lineTo(x+Math.cos(ang+1.57)*r*.7,y+Math.sin(ang+1.57)*r*.7);c.lineTo(x-Math.cos(ang)*r*.8,y-Math.sin(ang)*r*.8);c.lineTo(x+Math.cos(ang-1.57)*r*.7,y+Math.sin(ang-1.57)*r*.7);c.closePath()}
+  else c.arc(x,y,r,0,7)}
+function drawBg(c,p){const fc=floorCol(p);c.fillStyle=css(fc);c.fillRect(0,0,W,H);
+  const g=c.createRadialGradient(W/2,H*.55,80,W/2,H*.55,W*.75);g.addColorStop(0,'rgba(255,255,255,.035)');g.addColorStop(1,'rgba(0,0,0,.28)');c.fillStyle=g;c.fillRect(0,0,W,H);
+  c.strokeStyle='rgba(255,255,255,.045)';c.lineWidth=1;for(let i=-8;i<16;i++){c.beginPath();c.moveTo(i*80,H);c.lineTo(i*80+260,140);c.stroke()}for(let j=0;j<7;j++){const y=150+j*j*9+j*20;c.beginPath();c.moveTo(0,y);c.lineTo(W,y);c.stroke()}
+  // 시전체·대상 (회색 실루엣)
+  const ch=(x,y,s,kind)=>{c.fillStyle='rgba(0,0,0,.35)';c.beginPath();c.ellipse(x,y+s*1.05,s*1.1,s*.32,0,0,7);c.fill();c.fillStyle=css(lch(46,4,250));
+    if(kind)c.fillRect(x-s*.75,y-s*.9,s*1.5,s*1.8);else{c.beginPath();c.arc(x,y-s*.2,s*.85,0,7);c.fill()}};
+  ch(CASTER[0]-10,CASTER[1]+8,26,0);ch(TARGET[0]+6,TARGET[1]+4,24,1)}
+function glow(c,x,y,r,col,a){const g=c.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,css(col,a));g.addColorStop(.35,css(col,a*.45));g.addColorStop(1,css(col,0));c.fillStyle=g;c.fillRect(x-r,y-r,r*2,r*2)}
+
+function draw(c,p,f,opt={}){
+  const s=opt.s||1,BL=v=>`blur(${v*s}px)`;c.setTransform(s,0,0,s,0,0);c.filter='none';c.globalCompositeOperation='source-over';c.globalAlpha=1;
+  const {Fl,Fi,N}=T(p),R=ramps(p);drawBg(c,p);if(opt.bgOnly)return;
+  const dipping=p.dip&&f>=Fi-p.dipLen&&f<Fi, dk=dipping?.62:1;
+  // 1) 차지
+  if(f<Fl){const k=f/Fl,x=CASTER[0]+28,y=CASTER[1]-30;c.globalCompositeOperation='lighter';glow(c,x,y,10+30*k,R.body,.25+.35*k);c.globalCompositeOperation='source-over';
+    c.fillStyle=css(R.core);c.beginPath();c.arc(x,y,2+4*k,0,7);c.fill()}
+  // 2) 발사 섬광
+  const ls=p.launchScale*(p.bigImpact?1:1.6);
+  if(f>=Fl&&f<Fl+5){const k=(f-Fl)/5,x=CASTER[0]+28,y=CASTER[1]-30,r=(30+40*(1-k))*ls;c.globalCompositeOperation='lighter';glow(c,x,y,r*1.8,R.body,.55*(1-k));c.globalCompositeOperation='source-over';
+    c.fillStyle=css(R.core,1-k*.6);motifPath(c,x,y,r*.32,f*.3,'star');c.fill()}
+  // 3) 비행
+  const t0=(f-(Fl+3))/(Fi-(Fl+3));
+  if(t0>0&&t0<=1){const th=Math.min(1,t0), span=p.trail/100*1.25, n=26, layer=layerFor(s), lx=layer.getContext('2d');
+    const pts=[];for(let i=0;i<=n;i++){const s=i/n,tt=Math.max(0,th-span*s);pts.push(bez(tt,p))}
+    const head=pts[0],nx=bez(Math.min(1,th+.01),p),ang=Math.atan2(nx[1]-head[1],nx[0]-head[0]);
+    // 꼬리 레이어(소프트)
+    lx.setTransform(1,0,0,1,0,0);lx.clearRect(0,0,layer.width,layer.height);lx.setTransform(s,0,0,s,0,0);lx.lineCap='round';
+    for(let i=n;i>=1;i--){const s=i/n,a=pts[i],b=pts[i-1],w=p.headSize*1.4*Math.pow(1-s*.9,1.3);let col,al;
+      if(p.ramp){col=s<.55?mix(R.body,R.edge,s/.55):mix(R.edge,R.haze,(s-.55)/.45);al=s>.88?(1-s)/.12:1}
+      else{col=R.body;al=1-s}
+      lx.strokeStyle=css(col,al*dk);lx.lineWidth=Math.max(1,w);lx.beginPath();lx.moveTo(a[0],a[1]);lx.lineTo(b[0],b[1]);lx.stroke()}
+    // 꼬리 끝 입자(3차)
+    const rr=rnd(f*7+3);for(let i=0;i<4;i++){const q=pts[Math.floor(n*(.55+.4*rr()))];lx.fillStyle=css(p.ramp?R.edge:R.body,.8*dk);lx.beginPath();lx.arc(q[0]+(rr()-.5)*14,q[1]+(rr()-.5)*14,1.2+rr()*1.6,0,7);lx.fill()}
+    c.save();c.setTransform(1,0,0,1,0,0);c.filter=BL(3);c.drawImage(layer,0,0);c.filter=BL(7);c.globalCompositeOperation='lighter';c.globalAlpha=.3*dk;c.drawImage(layer,0,0);c.restore();
+    // 머리
+    const hs=p.headSize, shape=p.motif?p.motifShape:'orb';
+    c.globalCompositeOperation='lighter';glow(c,head[0],head[1],hs*3.2,R.body,.42*dk);c.globalCompositeOperation='source-over';
+    if(!p.hardHead){c.save();c.filter=BL(3)}
+    c.fillStyle=css(dipping?R.body:R.body);motifPath(c,head[0],head[1],hs,ang,shape);c.fill();
+    c.fillStyle=css(dipping?R.edge:R.core);motifPath(c,head[0],head[1],hs*(.35+p.core*.65),ang,shape);c.fill();
+    if(p.hardHead){c.strokeStyle=css(R.core,.9*dk);c.lineWidth=1.6;motifPath(c,head[0],head[1],hs,ang,shape);c.stroke()}
+    if(!p.hardHead)c.restore();
+    if(p.sceneLight){c.globalCompositeOperation='lighter';c.save();c.translate(head[0],head[1]+40);c.scale(1,.35);glow(c,0,0,60,R.body,.08*dk);c.restore();c.globalCompositeOperation='source-over'}
+    if(dipping){c.fillStyle='rgba(0,0,0,.1)';c.fillRect(0,0,W,H)}
+  }
+  // 4) 착탄
+  if(f>=Fi){const k=f-Fi,x=TARGET[0],y=TARGET[1]-6,ir=(p.bigImpact?p.impactRatio:.8)*ls*42,rr=rnd(99);
+    if(p.sceneLight&&k<70){const a=.42*Math.pow(1-k/70,1.6);c.globalCompositeOperation='lighter';c.save();c.translate(x,y+30);c.scale(1,.38);glow(c,0,0,ir*4.2,R.body,a);c.restore();c.globalCompositeOperation='source-over'}
+    if(k>=6&&k<72){const a=.28*Math.min(1,(k-6)/8)*(1-(k-6)/66);c.fillStyle=`rgba(0,0,0,${a})`;c.beginPath();c.ellipse(x,y+26,ir*.7,ir*.24,0,0,7);c.fill()}
+    for(let i=0;i<9;i++){const st=3+i*2,kk=k-st;if(kk<0||kk>46)continue;const a=.5*(1-kk/46),ang=rr()*6.28,dd=ir*(.3+rr()*.9)+kk*1.6;
+      const col=p.lchRamp?lch(34,16,labH(p.darkEnv?((p.hue+((((p.floorHue-p.hue+540)%360)-180)*.5))+360)%360:p.hue)):R.haze;const g=c.createRadialGradient(x+Math.cos(ang)*dd,y-kk*.9+Math.sin(ang)*dd*.4,0,x+Math.cos(ang)*dd,y-kk*.9+Math.sin(ang)*dd*.4,ir*.55+kk*1.4);g.addColorStop(0,css(col,a));g.addColorStop(1,css(col,0));c.fillStyle=g;c.fillRect(0,0,W,H)}
+    if(k<12){const r=ir*(.5+k*.26),lw=Math.max(1,ir*.075*(1-k/12));c.strokeStyle=css(k<2?R.core:mix(R.body,R.edge,k/12),.95*(1-k/12));c.lineWidth=lw;c.beginPath();c.ellipse(x,y+8,r,r*.42,0,0,7);c.stroke()}
+    const rs=rnd(7);for(let i=0;i<p.sparks;i++){const a=rs()*6.28,sp=.6+rs()*.8,kk=k;if(kk>14)continue;const d0=ir*(.3+kk*.16*sp),d1=d0+ir*(.55*(1-kk/14))*sp;
+      c.strokeStyle=css(kk<4?R.core:R.body,1-kk/14);c.lineWidth=Math.max(.8,2.4*(1-kk/14));c.beginPath();c.moveTo(x+Math.cos(a)*d0,y+Math.sin(a)*d0*.7);c.lineTo(x+Math.cos(a)*d1,y+Math.sin(a)*d1*.7);c.stroke()}
+    if(k<9){const a=1-k/9;c.globalCompositeOperation='lighter';glow(c,x,y,ir*1.9,R.body,.75*a);c.globalCompositeOperation='source-over';
+      if(k<4){c.fillStyle=css(R.core,1-k/4);motifPath(c,x,y,ir*.42*(1-k/5)*(.6+p.core),k*.2,'star');c.fill()}}
+    if(p.impactFrame&&k===1){const im=c.getImageData(0,0,c.canvas.width,c.canvas.height),d=im.data;for(let i=0;i<d.length;i+=4){const L=rgb2lab(d[i],d[i+1],d[i+2])[0],v=L>34?14:240;d[i]=d[i+1]=d[i+2]=v}c.putImageData(im,0,0)}
+  }
+}
+function viewMode(c,mode){if(mode==='color')return;const im=c.getImageData(0,0,c.canvas.width,c.canvas.height),d=im.data;
+  for(let i=0;i<d.length;i+=4){const L=rgb2lab(d[i],d[i+1],d[i+2])[0];let v;if(mode==='gray')v=Math.round(Math.max(0,Math.min(1,gam(((L+16)/116)**3)))*255);else v=L>=85?240:L>=60?165:L>=35?92:28;d[i]=d[i+1]=d[i+2]=v}c.putImageData(im,0,0)}
+
+// ================= 측정(핸드북 검사) =================
+const MW=320,MH=180;
+const sc=document.createElement('canvas');sc.width=MW;sc.height=MH;const sx=sc.getContext('2d',{willReadFrequently:true});
+function grab(p,f,bg){draw(sx,p,f,{bgOnly:bg,s:MW/W});const d=sx.getImageData(0,0,MW,MH).data,n=MW*MH,L=new Float32Array(n),A=new Float32Array(n),B=new Float32Array(n),Y=new Float32Array(n);
+  for(let i=0,j=0;i<n;i++,j+=4){const r=rgb2lab(d[j],d[j+1],d[j+2]);L[i]=r[0];A[i]=r[1];B[i]=r[2];Y[i]=r[3]}return {L,A,B,Y}}
+function analyze(p){const {Fl,Fi,N}=T(p),bg=grab(p,0,true),n=MW*MH,fr=[];
+  for(let f=0;f<N;f++){const g=grab(p,f,false);let area=0,core=0,E=0,sumL=0;for(let i=0;i<n;i++){const dE=Math.hypot(g.L[i]-bg.L[i],g.A[i]-bg.A[i],g.B[i]-bg.B[i]);if(dE>10){area++;if(g.L[i]>=85)core++}E+=Math.max(0,g.L[i]-45)}
+    fr.push({f,area:area/n*100,coreShare:area?core/area*100:0,E:E/n,Y:g.Y,L:g.L,A:g.A,B:g.B,meanL:0})}
+  const k=MW/W,at=(g,x,y)=>{const xi=Math.round(x*k),yi=Math.round(y*k);let s=0,m=0;for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){const i=(yi+dy)*MW+(xi+dx);if(i>=0&&i<n){s+=g.L[i];m++}}return s/m};
+  const chroma=(g,x,y)=>{const i=Math.round(y*k)*MW+Math.round(x*k);return Math.hypot(g.A[i],g.B[i])};
+  // 발사 vs 착탄
+  const lA=Math.max(...fr.slice(Fl,Fl+5).map(x=>x.area)),iA=Math.max(...fr.slice(Fi,Fi+8).map(x=>x.area)),lE=Math.max(...fr.slice(Fl,Fl+5).map(x=>x.E)),iE=Math.max(...fr.slice(Fi,Fi+8).map(x=>x.E));
+  // 착탄 직전 누르기: 직전 4f 최저 강도 ÷ 그 앞 구간 평균
+  const pre=fr.slice(Fi-4,Fi).map(x=>x.E),ref=fr.slice(Fi-14,Fi-6).map(x=>x.E),refM=ref.reduce((a,b)=>a+b,0)/ref.length,dipR=Math.min(...pre)/Math.max(1e-6,refM);
+  // 비행 중 코어 면적(이펙트 픽셀 중), 머리→꼬리 명도, 머리/꼬리 윤곽, 바닥 대비
+  const fl=fr.slice(Fl+8,Fi-6),med=a=>{const s=[...a].sort((x,y)=>x-y);return s[Math.floor(s.length/2)]||0};
+  const coreM=med(fl.map(x=>x.coreShare));
+  const fm=Math.round((Fl+3+Fi)/2),gm=fr[fm],th=(fm-(Fl+3))/(Fi-(Fl+3)),span=p.trail/100*1.25,hp=bez(th,p),tp=bez(Math.max(0,th-span*.65),p),bp=bez(Math.max(0,th-span*.2),p),floorL=p.floorL;
+  // 몸통 한 점의 색: 반경 3px(320 기준) 안에서 바닥과 가장 다른 픽셀(리본 한가운데)
+  const pick=(x,y)=>{const cx=Math.round(x*k),cy=Math.round(y*k);let best=-1,bi=-1;for(let dy=-3;dy<=3;dy++)for(let dx=-3;dx<=3;dx++){const i=(cy+dy)*MW+cx+dx;if(i<0||i>=n)continue;const d=Math.hypot(gm.L[i]-bg.L[i],gm.A[i]-bg.A[i],gm.B[i]-bg.B[i]);if(d>best){best=d;bi=i}}return bi<0?[0,0]:[gm.L[bi],Math.hypot(gm.A[bi],gm.B[bi])]};
+  const [tailL,tailC]=pick(tp[0],tp[1]),[bodyL,bodyC]=pick(bp[0],bp[1]);
+  // 윤곽 선명도: 원본 해상도에서 진행 방향에 수직인 선을 따라 명도를 읽고, 가장 가파른 기울기 ÷ (최대 − 바닥)
+  const fc=document.createElement('canvas');fc.width=W;fc.height=H;const fx=fc.getContext('2d',{willReadFrequently:true});draw(fx,p,fm,{s:1});const fd=fx.getImageData(0,0,W,H).data;
+  const Lat=(x,y)=>{x=Math.round(x);y=Math.round(y);if(x<0||y<0||x>=W||y>=H)return floorL;const j=(y*W+x)*4;return rgb2lab(fd[j],fd[j+1],fd[j+2])[0]};
+  const tang=t=>{const a=bez(Math.max(0,t-.005),p),b=bez(Math.min(1,t+.005),p);return Math.atan2(b[1]-a[1],b[0]-a[0])};
+  const sharp=(pt,t,reach)=>{const a=tang(t)+Math.PI/2,ux=Math.cos(a),uy=Math.sin(a);let best=0;for(const sg of [1,-1]){const prof=[];for(let d=0;d<=reach;d++)prof.push(Lat(pt[0]+ux*d*sg,pt[1]+uy*d*sg));const mx=Math.max(...prof),mn=Math.min(...prof);if(mx-mn<5)continue;for(let d=1;d<prof.length;d++)best=Math.max(best,(prof[d-1]-prof[d])/(mx-mn))}return best*10};
+  const eH=sharp(hp,th,p.headSize*2.2),eT=sharp(tp,Math.max(0,th-span*.65),p.headSize*1.6);
+  // 머리가 화면에서 가장 밝은가(비행 중 이펙트 상위 1% 명도와 비교)
+  let top=0;{const arr=[];for(let i=0;i<n;i++)if(gm.L[i]>floorL+15)arr.push(gm.L[i]);arr.sort((a,b)=>a-b);top=arr[Math.floor(arr.length*.99)]||0}
+  let hiI=-1;const headMax=(()=>{let m=0;const cx=Math.round(hp[0]*k),cy=Math.round(hp[1]*k);for(let dy=-3;dy<=3;dy++)for(let dx=-3;dx<=3;dx++){const i=(cy+dy)*MW+cx+dx;if(i>=0&&i<n&&gm.L[i]>m){m=gm.L[i];hiI=i}}return m})();
+  // 코어 색: 원본 해상도에서 머리 둘레 가장 밝은 픽셀의 선명도
+  const coreC=(()=>{let bL=-1,bC=0;const cx=Math.round(hp[0]),cy=Math.round(hp[1]),R=Math.round(p.headSize);for(let y=cy-R;y<=cy+R;y++)for(let x=cx-R;x<=cx+R;x++){if(x<0||y<0||x>=W||y>=H)continue;const j=(y*W+x)*4,l=rgb2lab(fd[j],fd[j+1],fd[j+2]);if(l[0]>bL){bL=l[0];bC=Math.hypot(l[1],l[2])}}return bC})();
+  const headL=headMax;
+  // 섬광(measure.py flash와 같은 정의)
+  const ev=[];for(let f=1;f<N;f++){let up=0,dn=0;const a=fr[f-1].Y,b=fr[f].Y;for(let i=0;i<n;i++){const d=b[i]-a[i];if(Math.min(a[i],b[i])<.8){if(d>=.1)up++;else if(d<=-.1)dn++}}up/=n;dn/=n;if(up>=.1||dn>=.1)ev.push([f,up>=dn?1:-1])}
+  const fls=[];let last=null;for(const [f,s] of ev){if(last&&s!==last[1]){fls.push(f);last=null}else last=[f,s]}
+  let fmax=0;for(let s=0;s<N;s++)fmax=Math.max(fmax,fls.filter(x=>x>=s&&x<s+FPS).length);
+  return {fr,Fl,Fi,N,lA,iA,lE,iE,dipR,coreM,headL,tailL,bodyL,floorL,eH,eT,top,headMax,coreC,fmax,fls,tailC,bodyC}}
+
+const CHECKS=[
+ r=>({ok:r.iA/Math.max(.01,r.lA)>=2,warn:r.iA/Math.max(.01,r.lA)>=1.4,name:'착탄이 발사보다 크다',v:`×${(r.iA/Math.max(.01,r.lA)).toFixed(1)}`,crit:'면적 2배 이상',why:'실측 2건: 발사의 2–5배. 발사가 크면 맞았다는 느낌이 약하다.',card:'투사체 — 유형 노트 · 시간적 위계'}),
+ r=>({ok:r.dipR<=.8,warn:r.dipR<=.9,name:'착탄 직전 밝기가 빠진다',v:`${Math.round(r.dipR*100)}%`,crit:'직전 강도 80% 이하',why:'두 사례 모두 착탄 직전 2f 동안 밝기가 빠졌다. 다음 피크의 대비를 미리 만든다.',card:'피크 앞 밝기 누르기'}),
+ r=>({ok:r.coreM<=7.5,warn:r.coreM<=12,name:'가장 밝은 면적은 작게',v:`${r.coreM.toFixed(1)}%`,crit:'비행 중 코어 ≤ 7.5%',why:'지속 구간 코어(명도 85 이상)는 이펙트의 4–7.5%(실측 3건).',card:'밝은 면적은 희소하게'}),
+ r=>({ok:r.headL-r.tailL>=14&&r.tailC>=r.bodyC*.7,warn:r.headL-r.tailL>=8&&r.tailC>=r.bodyC*.6,name:'꼬리로 갈수록 어둡고 진하다',v:`명도 ${Math.round(r.headL)}→${Math.round(r.tailL)} · 선명도 ${Math.round(r.bodyC)}→${Math.round(r.tailC)}`,crit:'명도 −14 이상, 선명도 70% 이상 유지',why:'실측: 머리 → 꼬리 명도 −14 ~ −42, 선명도는 그대로이거나 오른다. 투명도만 빼서 바닥에 묻히는 것과 다르다. 노랑·초록은 어두우면 낼 수 있는 진하기가 줄어 기준을 70%로 둔다.',card:'투사체 — 유형 노트'}),
+ r=>({ok:r.headMax>=r.top-2,warn:r.headMax>=r.top-8,name:'흑백에서 머리가 가장 밝다',v:`${Math.round(r.headMax)} / ${Math.round(r.top)}`,crit:'머리 ≥ 화면 상위 1%',why:'머리가 1차. 흑백으로 봐도 머리가 먼저 보여야 한다.',card:'형태 위계 1·2·3차'}),
+ r=>({ok:r.eH>=r.eT*1.3,warn:r.eH>=r.eT,name:'머리 윤곽이 꼬리보다 또렷하다',v:`${r.eH.toFixed(1)} / ${r.eT.toFixed(1)}`,crit:'머리 ≥ 꼬리 ×1.3',why:'하드한 머리, 소프트한 꼬리(하트 사례 1.8배). 머리가 흐리면 머리에 하드 포인트를 둔다.',card:'하드·소프트 엣지'}),
+ r=>({ok:r.bodyL-r.floorL>=30,warn:r.bodyL-r.floorL>=20,name:'바닥과 명도 차 30 이상',v:`${Math.round(r.bodyL)} − ${r.floorL}`,crit:'몸통 − 바닥 ≥ 30',why:'두 사례 모두 바닥과 30 안팎 이상 떨어졌다. 바닥이 밝은 맵에서는 특히.',card:'대비의 크기가 시선을 정한다'}),
+ r=>({ok:r.coreC>=5,warn:r.coreC>=2,name:'코어에 색이 남아 있다',v:`선명도 ${Math.round(r.coreC)}`,crit:'선명도 5 이상',why:'순백은 최대 타격 순간에만. 평소 코어는 색을 품은 백색.',card:'코어는 색을 품은 백색'}),
+ r=>({ok:r.fmax<=2,warn:r.fmax<=3,name:'섬광은 1초에 3회 이하',v:`${r.fmax}회`,crit:'≤ 2회 권장, 3회 상한',why:'광과민성 기준(근사). 게임에서는 다른 스킬과 겹쳐 더해진다.',card:'임팩트 프레임'}),
+];
+
+// ================= UI =================
+const $=id=>document.getElementById(id),cvA=$('cvA'),cA=cvA.getContext('2d',{willReadFrequently:true}),cvB=$('cvB'),cB=cvB.getContext('2d',{willReadFrequently:true});
+let cur=0,playing=false,speed=1,vmode='color',acc=0,lastT=0,result=null,ab=false;
+function buildControls(){const groups={};PRINCIPLES.forEach(p=>(groups[p[1]]=groups[p[1]]||[]).push(p));
+  let h=`<div class="sec"><h3>색과 장면</h3><div class="bar" style="margin-bottom:6px">${PRESET_HUES.map(([n,v])=>`<button class="btn" data-hue="${v}">${n}</button>`).join('')}</div>`;
+  h+=SL.map(([k,n,a,b,s])=>`<label class="sl"><span>${n}</span><input type="range" min="${a}" max="${b}" step="${s}" data-k="${k}"><span data-v="${k}"></span></label>`).join('');
+  h+=`<label class="sl"><span>머리 모양</span><select data-k="motifShape"><option value="heart">하트</option><option value="star">4각 별</option><option value="diamond">마름모</option><option value="orb">원</option></select><span></span></label></div>`;
+  for(const g of ['형태감','질감','컬러','쉐입','타이밍'])if(groups[g])h+=`<div class="sec" style="margin-top:12px"><h3>${g}</h3>${groups[g].map(([k,,n,d,cd])=>`<label class="opt"><input type="checkbox" data-k="${k}"><b>${n}</b><p>${d}</p><span class="cd">핸드북 · ${cd}</span></label>`).join('')}</div>`;
+  $('controls').innerHTML=h;
+  $('controls').querySelectorAll('[data-k]').forEach(el=>el.addEventListener('input',()=>{const k=el.dataset.k;P[k]=el.type==='checkbox'?el.checked:el.tagName==='SELECT'?el.value:+el.value;sync();changed()}));
+  $('controls').querySelectorAll('[data-hue]').forEach(el=>el.addEventListener('click',()=>{P.hue=+el.dataset.hue;sync();changed()}))}
+function sync(){$('controls').querySelectorAll('[data-k]').forEach(el=>{const k=el.dataset.k;if(el.type==='checkbox')el.checked=!!P[k];else el.value=P[k]});
+  $('controls').querySelectorAll('[data-v]').forEach(el=>{const v=P[el.dataset.v];el.textContent=typeof v==='number'&&v%1?v.toFixed(2):v})}
+let atimer=null;function changed(){const t=T(P);$('scrub').max=t.N-1;if(cur>=t.N)cur=t.N-1;render();clearTimeout(atimer);atimer=setTimeout(runChecks,180)}
+function render(){const t=T(P);draw(cA,P,cur);viewMode(cA,vmode);if(ab){draw(cB,PB,Math.min(cur,T(PB).N-1));viewMode(cB,vmode)}
+  $('fr').textContent=`F${cur} · ${(cur/FPS).toFixed(2)}s / ${t.N}f`;$('scrub').value=cur;
+  const ph=cur<t.Fl?'차지':cur<t.Fl+5?'발사':cur<t.Fi-(P.dip?P.dipLen:0)?'비행':cur<t.Fi?'착탄 직전 누르기':cur<t.Fi+12?'착탄':'여운';$('ph').textContent=`${ph} · 발사 F${t.Fl} · 착탄 F${t.Fi} · 비행 ${P.flight}f (${(P.flight/FPS).toFixed(2)}s)`;drawTL()}
+function drawTL(){const c=$('tl').getContext('2d'),w=1200,h=84,t=T(P);c.clearRect(0,0,w,h);c.fillStyle='#0E121A';c.fillRect(0,0,w,h);const xf=f=>8+f/(t.N-1)*(w-16);
+  [[0,t.Fl,'#3a4256','차지'],[t.Fl,t.Fl+5,'#F5B841','발사'],[t.Fl+5,t.Fi,'#2b3550','비행'],[t.Fi,t.Fi+12,'#ffffff','착탄'],[t.Fi+12,t.N,'#3a4256','여운']].forEach(([a,b,col,n])=>{c.fillStyle=col;c.globalAlpha=.85;c.fillRect(xf(a),h-18,xf(b)-xf(a)-1,12);c.globalAlpha=1;c.fillStyle='#8A91A6';c.font='600 11px sans-serif';if(xf(b)-xf(a)>34)c.fillText(n,xf(a)+3,h-22)});
+  if(result&&result.N===t.N){const mE=Math.max(...result.fr.map(x=>x.E))||1;c.strokeStyle='#fff';c.lineWidth=1.5;c.beginPath();result.fr.forEach((x,i)=>{const y=h-26-x.E/mE*48;i?c.lineTo(xf(i),y):c.moveTo(xf(i),y)});c.stroke();
+    c.fillStyle='#8A91A6';c.fillText('강도(화면에서 명도 45를 넘는 양)',10,12);result.fls.forEach(f=>{c.fillStyle='#EF4444';c.fillRect(xf(f)-1,4,2,h-28)})}
+  if(P.dip){c.fillStyle='rgba(245,184,65,.3)';c.fillRect(xf(t.Fi-P.dipLen),0,xf(t.Fi)-xf(t.Fi-P.dipLen),h-20)}
+  c.fillStyle='#F5B841';c.fillRect(xf(cur)-1,0,2,h)}
+function runChecks(){$('score').innerHTML='<span>검사 중…</span>';setTimeout(runChecks2,20)}
+function runChecks2(){result=analyze(P);const rs=CHECKS.map(f=>f(result)),np=rs.filter(x=>x.ok).length;
+  $('score').innerHTML=`<b>${np} / ${rs.length}</b><span>통과 · 경고 ${rs.filter(x=>!x.ok&&x.warn).length} · 실패 ${rs.filter(x=>!x.ok&&!x.warn).length}</span>`;
+  $('checks').innerHTML=rs.map(x=>`<div class="ck"><i class="${x.ok?'p':x.warn?'w':'f'}">${x.ok?'✓':x.warn?'!':'✕'}</i><div><b>${x.name}</b><small>${x.why}</small><small style="color:var(--faint)">핸드북 · ${x.card}</small></div><em>${x.v}<s>${x.crit}</s></em></div>`).join('');drawTL();window.__checks=rs}
+function tick(ts){if(playing){const dt=Math.min(.1,(ts-lastT)/1000)||0;acc+=dt*FPS*speed;while(acc>=1){acc-=1;cur=(cur+1)%T(P).N}render()}lastT=ts;requestAnimationFrame(tick)}
+$('play').onclick=()=>{playing=!playing;$('play').textContent=playing?'❚❚ 정지':'▶ 재생'};
+$('prev').onclick=()=>{playing=false;$('play').textContent='▶ 재생';cur=Math.max(0,cur-1);render()};$('next').onclick=()=>{playing=false;$('play').textContent='▶ 재생';cur=Math.min(T(P).N-1,cur+1);render()};
+$('scrub').oninput=e=>{cur=+e.target.value;render()};
+document.querySelectorAll('[data-sp]').forEach(b=>b.onclick=()=>{speed=+b.dataset.sp;document.querySelectorAll('[data-sp]').forEach(x=>x.classList.toggle('on',x===b))});
+document.querySelectorAll('[data-vm]').forEach(b=>b.onclick=()=>{vmode=b.dataset.vm;document.querySelectorAll('[data-vm]').forEach(x=>x.classList.toggle('on',x===b));render()});
+$('presetOn').onclick=()=>{P={...DEF,hue:P.hue,floorL:P.floorL};sync();changed()};$('presetOff').onclick=()=>{const k={hue:P.hue,floorL:P.floorL};P={...OFF,...k};sync();changed()};
+$('saveB').onclick=()=>{PB={...P};if(!ab)$('abBtn').click();else render()};
+$('abBtn').onclick=()=>{ab=!ab;$('abBtn').classList.toggle('on',ab);$('vwB').hidden=!ab;$('views').classList.toggle('ab',ab);$('lblA').textContent=ab?'A · 현재 설정':'현재 설정';render()};
+$('png').onclick=()=>{const a=document.createElement('a');a.download=`projectile_F${cur}.png`;a.href=cvA.toDataURL('image/png');a.click()};
+$('json').onclick=()=>{const s=JSON.stringify(P);navigator.clipboard&&navigator.clipboard.writeText(s);$('jsonIn').value=s};
+$('load').onclick=()=>{try{P={...DEF,...JSON.parse($('jsonIn').value)};sync();changed()}catch(e){$('jsonIn').value='JSON 형식이 아니다'}};
+$('rec').onclick=async()=>{if(!window.MediaRecorder){alert('이 브라우저는 녹화를 지원하지 않는다');return}const st=cvA.captureStream(FPS),mr=new MediaRecorder(st,{mimeType:MediaRecorder.isTypeSupported('video/webm;codecs=vp9')?'video/webm;codecs=vp9':'video/webm',videoBitsPerSecond:12e6}),ch=[];
+  mr.ondataavailable=e=>ch.push(e.data);mr.onstop=()=>{const a=document.createElement('a');a.download='projectile.webm';a.href=URL.createObjectURL(new Blob(ch,{type:'video/webm'}));a.click();$('rec').textContent='영상 저장(webm)'};
+  playing=false;$('rec').textContent='녹화 중…';mr.start();const n=T(P).N;for(let f=0;f<n;f++){cur=f;draw(cA,P,f);await new Promise(r=>setTimeout(r,1000/FPS))}mr.stop();render()};
+// 자동화(헤드리스 검사·프레임 추출용)
+window.LAB={head:f=>{const t=T(P),t0=(f-(t.Fl+3))/(t.Fi-(t.Fl+3));return t0>0&&t0<=1?bez(Math.min(1,t0),P):null},T:()=>T(P),set:o=>{P={...P,...o};sync();changed()},frame:f=>{cur=f;draw(cA,P,f);return cvA.toDataURL('image/png')},check:()=>{runChecks2();return window.__checks},P:()=>P,DEF,OFF};
+buildControls();sync();changed();requestAnimationFrame(tick);
+</script>
+</body>
+</html>
